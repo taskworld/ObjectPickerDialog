@@ -71,6 +71,7 @@ class ObjectPickerDialog<T, VH : PickerAdapter.ViewHolder>(private val builder: 
         rvItems.setLayoutManager(layoutManager)
         rvItems.setAdapter(builder.adapter)
 
+        svItems.setOnQueryTextListener(this)
         // Hack to show search action when click anywhere on SearchView
         svItems.setOnClickListener {
             svItems.onActionViewExpanded()

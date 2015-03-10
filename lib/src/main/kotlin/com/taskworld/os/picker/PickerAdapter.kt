@@ -77,7 +77,7 @@ abstract class PickerAdapter<T, VH : PickerAdapter.ViewHolder>(items: List<T>) :
                 val result = Filter.FilterResults()
                 val filteredItems = arrayListOf<T>()
 
-                for (item in mDisplayItems) {
+                for (item in mItems) {
                     if (validateItemWithConstraint(constraint, item)) {
                         filteredItems.add(item)
                     }
