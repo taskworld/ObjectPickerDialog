@@ -23,11 +23,8 @@ import android.app.AlertDialog
  */
 class ObjectPickerDialog<T, VH : PickerAdapter.ViewHolder>(private val builder: Builder<T, VH>) : DialogFragment(), SearchView.OnQueryTextListener {
 
-    val tvTitle by Delegates.lazy { vRoot.findViewById(R.id.tvTitle) as TextView }
     val svItems by Delegates.lazy { vRoot.findViewById(R.id.svItems) as SearchView }
-    val btConfirm by Delegates.lazy { vRoot.findViewById(R.id.btConfirm) as Button }
     val rvItems by Delegates.lazy { vRoot.findViewById(R.id.rvItems) as RecyclerView }
-    val linActionSection by Delegates.lazy { vRoot.findViewById(R.id.linActionSection) }
 
     var vRoot: View by Delegates.notNull()
 
@@ -37,6 +34,7 @@ class ObjectPickerDialog<T, VH : PickerAdapter.ViewHolder>(private val builder: 
             var title: String by Delegates.notNull()
             var confirmAction: ((items: List<T>) -> Unit) by Delegates.notNull()
             var adapter: PickerAdapter<T, VH> by Delegates.notNull()
+            var confirmText: String by Delegates.notNull()
 
             public fun setTitle(title: String): Builder<T, VH> {
                 this.title = title
@@ -48,7 +46,8 @@ class ObjectPickerDialog<T, VH : PickerAdapter.ViewHolder>(private val builder: 
                 return this
             }
 
-            public fun setConfirmAction(confirmBlock: ((items: List<T>) -> Unit)): Builder<T, VH> {
+            public fun setConfirmAction(confirmText: String, confirmBlock: ((items: List<T>) -> Unit)): Builder<T, VH> {
+                this.confirmText = confirmText
                 this.confirmAction = confirmBlock
                 return this
             }
@@ -59,33 +58,27 @@ class ObjectPickerDialog<T, VH : PickerAdapter.ViewHolder>(private val builder: 
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        vRoot =  inflater.inflate(R.layout.dialog_fragment_picker, container, false)
-        return vRoot
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog? {
+        val dialogBuilder = AlertDialog.Builder(getActivity())
+        dialogBuilder.setTitle(builder.title)
+                .setPositiveButton(builder.confirmText, { dialog, view ->
+                    builder.confirmAction(builder.adapter.getPickedItems())
+                })
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super<DialogFragment>.onViewCreated(view, savedInstanceState)
-
-        getDialog().setTitle(builder.title)
-
-        btConfirm.setOnClickListener { view ->
-            builder.confirmAction(builder.adapter.getPickedItems())
-            dismiss()
-        }
-
-        svItems.setOnQueryTextListener(this)
-
-        val layout = LinearLayoutManager(getActivity())
-        layout.setOrientation(LinearLayoutManager.VERTICAL)
-        rvItems.setLayoutManager(layout)
-
+        vRoot = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_fragment_picker, null, false)
+        val layoutManager = LinearLayoutManager(getActivity())
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL)
+        rvItems.setLayoutManager(layoutManager)
         rvItems.setAdapter(builder.adapter)
 
         // Hack to show search action when click anywhere on SearchView
         svItems.setOnClickListener {
             svItems.onActionViewExpanded()
         }
+
+        dialogBuilder.setView(vRoot)
+
+        return dialogBuilder.create()
     }
 
     override fun onQueryTextChange(query: String?): Boolean {

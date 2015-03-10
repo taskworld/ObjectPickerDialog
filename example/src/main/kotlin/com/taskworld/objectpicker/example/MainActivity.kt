@@ -25,7 +25,7 @@ class MainActivity: ActionBarActivity() {
             val dialog = ObjectPickerDialog.Builder<String, RoleAdapter.ViewHolder>()
                     .setTitle("Pick Role(s)")
                     .setItemAdapter(RoleAdapter(data))
-                    .setConfirmAction ({ items ->
+                    .setConfirmAction ("SELECT", { items ->
                         Toast.makeText(this@MainActivity, items.toString(), Toast.LENGTH_LONG).show()
                     }).build()
             dialog.show(getSupportFragmentManager(), "")

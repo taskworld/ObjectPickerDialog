@@ -2,49 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <FrameLayout
-        android:id="@+id/flTitleSection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-    </FrameLayout>
+    android:layout_height="match_parent" >
 
     <android.support.v7.widget.SearchView
         android:id="@+id/svItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/flTitleSection"
-        android:background="@android:color/holo_orange_light"/>
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/linActionSection"
+        android:padding="8dp"
         android:layout_below="@+id/svItems" />
-
-    <FrameLayout
-        android:id="@+id/linActionSection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btConfirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="Confirm" />
-
-    </FrameLayout>
 
 </RelativeLayout>
